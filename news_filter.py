@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os
 import platform
+from my_config_private import API_KEY  
 from config_private import API_KEY
 from config_public import KEYWORDS, SELECTED_SOURCES
 
