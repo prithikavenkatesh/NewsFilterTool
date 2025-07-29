@@ -2,13 +2,36 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import os
-import msvcrt
+import platform
 from config_private import API_KEY
 from config_public import KEYWORDS, SELECTED_SOURCES
 
+
+# Platform-specific imports
+if platform.system() == 'Windows':
+    import msvcrt
+else:
+    import fcntl
+
+def is_file_locked(filepath):
+    try:
+        with open(filepath, 'a') as f:
+            if platform.system() == 'Windows':
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                fcntl.flock(f, fcntl.LOCK_UN)
+        return False
+    except (OSError, BlockingIOError):
+        return True
+    except Exception as e:
+        print(f"Error checking file lock: {e}")
+        return True
+
+
 # API Setup
 URL = 'https://newsapi.org/v2/everything'
-
 from_date = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
 
 # Error-handling for config files
@@ -62,21 +85,12 @@ for keyword in KEYWORDS:
 # Export to Excel with file lock check
 output_file = 'filtered_news.xlsx'
 
-try: 
-    # Check if the file is open or locked
-    if os.path.exists(output_file):
-        with open(output_file, 'rb') as f:
-            try:
-                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
-                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
-            except OSError:
-                print(f"The file '{output_file} appears to be open or locked. Please close it and try again.")
-                exit()
-            except Exception as e:
-                print(f"The file '{output_file}'appears to be open or locked. Please close it and try again.")
-                exit()
-            except Exception as e:
-                print(f"Error checking file lock: {e}")
+
+try:
+    if os.path.exists(output_file) and is_file_locked(output_file):
+        print(f"The file '{output_file}' appears to be open or locked. Please close it and try again.")
+        exit()
+
     # Save to Excel
     df = pd.DataFrame(articles)
     df.to_excel(output_file, index=False)
