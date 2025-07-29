@@ -41,10 +41,7 @@ for keyword in KEYWORDS:
         })
 
 # Export to Excel 
-
-output_file = 'filtered_news.xlsx'
-
 df = pd.DataFrame(articles)
 df.to_excel(output_file, index=False)
-print(f"Saved {len(articles)} articles to '{output_file}'")
+print(f"Saved {len(articles)} articles to 'filtered_news.xlsx'")
 print(data)
