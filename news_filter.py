@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
+import os
+import msvcrt
 from config_private import API_KEY
 from config_public import KEYWORDS, SELECTED_SOURCES
 
@@ -40,8 +42,30 @@ for keyword in KEYWORDS:
             'Link' : article['url']
         })
 
-# Export to Excel 
-df = pd.DataFrame(articles)
-df.to_excel(output_file, index=False)
-print(f"Saved {len(articles)} articles to 'filtered_news.xlsx'")
-print(data)
+# Export to Excel with file lock check
+output_file = 'filtered_news.xlsx'
+
+try: 
+    # Check if the file is open or locked
+    if os.path.exists(output_file):
+        with open(output_file, 'rb') as f:
+            try:
+                msvcrt.locking(f.fileno(), msvcrt.LK_NBLCK, 1)
+                msvcrt.locking(f.fileno(), msvcrt.LK_UNLCK, 1)
+            except OSError:
+                print(f"The file '{output_file} appears to be open or locked. Please close it and try again.")
+                exit()
+            except Exception as e:
+                print(f"The file '{output_file}'appears to be open or locked. Please close it and try again.")
+                exit()
+            except Exception as e:
+                print(f"Error checking file lock: {e}")
+    # Save to Excel
+    df = pd.DataFrame(articles)
+    df.to_excel(output_file, index=False)
+    print(f"Saved {len(articles)} articles to '{output_file}'")
+    print(data)
+except PermissionError:
+    print(f"Permission denied: Unable to write to '{output_file}'. Please close the file if it's opena nd try again.")
+
+
