@@ -3,7 +3,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 import os
 import platform
-from my_config_private import API_KEY  
 from config_private import API_KEY
 from config_public import KEYWORDS, SELECTED_SOURCES
 
@@ -31,9 +30,28 @@ def is_file_locked(filepath):
         return True
 
 
+# API Key import based on dev mode
+try:
+    if os.getenv("USE_MY_CONFIG") == "true":
+        from my_config_private import API_KEY
+    else:
+        from config_private import API_KEY
+except ImportError:
+    print("Error: config_private.py is missing or API_KEY is not defined.")
+    exit(1)
+
+    # USE_MY_CONFIG=true python news_filter.py instead of writing from my_config_private import API_KEY
+
+
 # API Setup
 URL = 'https://newsapi.org/v2/everything'
 from_date = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
+
+
+if os.getenv("USE_MY_CONFIG") == "true":
+    from my_config_private import API_KEY
+else:
+    from config_private import API_KEY
 
 # Error-handling for config files
 try:
