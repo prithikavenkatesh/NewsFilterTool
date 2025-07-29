@@ -36,7 +36,7 @@ from_date = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
 
 # Error-handling for config files
 try:
-    from config_private import API_KEY
+    from my_config_private import API_KEY
 except ImportError:
     print("Error: config_private.py is missing or API_KEY is not defined.")
     exit(1)
