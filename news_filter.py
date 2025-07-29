@@ -11,6 +11,23 @@ URL = 'https://newsapi.org/v2/everything'
 
 from_date = (datetime.today() - timedelta(days=30)).strftime('%Y-%m-%d')
 
+# Error-handling for config files
+try:
+    from config_private import API_KEY
+except ImportError:
+    print("Error: config_private.py is missing or API_KEY is not defined.")
+    exit(1)
+try:
+    from config_public import KEYWORDS, SELECTED_SOURCES
+    if not KEYWORDS:
+        raise ValueError ("KEYWORDS list is empty.")
+except ImportError:
+    print("Error: config_public.py is missing or variables are not defined.")
+    exit(1)
+except ValueError as ve:
+    print(f"Error: {ve}")
+    exit(1)
+
 # Collect articles
 articles = []
 for keyword in KEYWORDS:
