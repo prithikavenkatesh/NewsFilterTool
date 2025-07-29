@@ -29,6 +29,8 @@ Open config_public.py and customize the following:
 
 KEYWORDS: List of topics to filter news by
 SELECTED_SOURCES: (Optional) Comma-separated source IDs from NewsAPI (e.g., "bbc-news,cnn")
+
+
 Example:
 
 KEYWORDS = ["sustainable packaging", "green economy", "climate change"]
@@ -57,5 +59,4 @@ The script includes basic error handling for:
 Clear messages will guide users to fix issues.
 
 📜 License & Credits
-This project is developed by Prithika Venkatesh.
 News data is sourced via NewsAPI.org.
