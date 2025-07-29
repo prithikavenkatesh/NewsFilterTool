@@ -24,7 +24,7 @@
 2. **Install dependencies**:
    pip install -r requirements.txt
 
-3. **Edit the configuration file**:
+3. **Edit the public configuration file**:
 Open config_public.py and customize the following:
 
 KEYWORDS: List of topics to filter news by
@@ -34,7 +34,13 @@ Example:
 KEYWORDS = ["sustainable packaging", "green economy", "climate change"]
 SELECTED_SOURCES = "bbc-news"
 
-4. **Run the tool**:
+4. **Edit the private configuration file**
+Step 1: Open the file named config_private.py in the root directory.
+Step 2: Replace "your_api_key_here" with your actual API key that you can obtain from https://newsapi.org/ .
+
+Optional: To keep your API key private, especially before publishing your project online, you can add config_private.py to your .gitignore file.
+
+5. **Run the tool**:
 py news_filter.py
 
 The script will:
@@ -42,7 +48,6 @@ The script will:
 - Fetch news articles using the built-in API key
 - Filter them based on your keywords and sources
 - Export the results to an Excel file
-
 
 
 🧯 Error Handling
