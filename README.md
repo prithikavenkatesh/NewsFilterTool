@@ -52,9 +52,8 @@ The script will:
 
 🧯 Error Handling
 The script includes basic error handling for:
-
-Missing or empty KEYWORDS list
-Malformed values in config files
+- Missing or empty KEYWORDS list
+- Malformed values in config files
 Clear messages will guide users to fix issues.
 
 📜 License & Credits
